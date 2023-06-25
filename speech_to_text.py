@@ -22,6 +22,24 @@ def speech_to_text_microphone():
             print("Unable to recognize speech")
         except sr.RequestError as e:
             print("Error occurred; {0}".format(e))
+            
+
+def speech_to_text_audio_file(file_location):
+    
+    recognizer = sr.Recognizer()
+
+    # Use the default microphone as the audio source
+    with sr.AudioFile(file_location) as source:
+        audio = recognizer.record(source)  # Read the entire audio file
+
+        try:
+            # Recognize speech using Google Speech Recognition
+            text = recognizer.recognize_google(audio)
+            print("You said:", text)
+        except sr.UnknownValueError:
+            print("Unable to recognize speech")
+        except sr.RequestError as e:
+            print("Error occurred; {0}".format(e))
 
 def speech_to_text_video(video_path, audio_output_path):
     video = VideoFileClip(video_path)

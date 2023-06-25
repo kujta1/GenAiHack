@@ -29,6 +29,8 @@
     <div class="button-container">
         <button class="button" onclick="startRecording()">Start Recording</button>
         <button class="button" onclick="stopRecording()">Stop Recording</button>
+        <button  class="button"  href="{{url_for('guide',file_location= 'recorded_audio.ogg',file_type='voice' )}}"> Submit </button>
+
     </div>
 
     <script>
@@ -56,7 +58,7 @@
                         let downloadLink = document.createElement('a');
                         downloadLink.href = url;
                         downloadLink.download = 'recorded_audio.ogg';
-                        downloadLink.innerHTML = 'Download Recorded Audio';
+                        //downloadLink.innerHTML = 'Download Recorded Audio';
                         document.body.appendChild(downloadLink);
                     };
                 })

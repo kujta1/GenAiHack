@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-
+import speech_to_text as ST
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -35,7 +35,19 @@ def buttons2():
 @app.route('/buttons3')
 def buttons3():
     return render_template('buttons3.html')
-
+@app.route('/guide')
+def guide(file_location, file_type):
+    if file_type=='text':
+        print(file_location)
+    elif file_type=='video':
+        save_file='save_audio.mp3'
+        ST.speech_to_text_video(file_location,save_file)
+    elif  file_type =='audio':
+        ST.speech_to_text_audio_file(file_location)
+    return render_template('guide.html')
+        
+        
+    
 
 
 if __name__ == '__main__':

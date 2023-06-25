@@ -36,7 +36,7 @@
     <div class="button-container">
         <button class="button" onclick="startRecording()">Start Recording</button>
         <button class="button" onclick="stopRecording()">Stop Recording</button>
-        <button  class="button"> Submit </button>
+        <button  class="button"  href="{{url_for('guide',file_location= 'recorded_video.webm',file_type='video' )}}"> Submit </button>
     </div>
 
     <script>

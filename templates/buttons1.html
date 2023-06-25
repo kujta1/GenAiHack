@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Describe the issue using a video </title>
+    <style>
+        video {
+            width: 320px;
+            height: 240px;
+            border: 1px solid #ccc;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Describe the issue using a video </h1>
+    <video id="videoElement" autoplay></video>
+    <div class="button-container">
+        <button class="button" onclick="startRecording()">Start Recording</button>
+        <button class="button" onclick="stopRecording()">Stop Recording</button>
+        <button  class="button"> Submit </button>
+    </div>
+
+    <script>
+        let videoElement = document.getElementById('videoElement');
+        let mediaRecorder;
+        let chunks = [];
+
+        // Get user media (camera) and display in the video element
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                videoElement.srcObject = stream;
+                mediaRecorder = new MediaRecorder(stream);
+
+                // Event handler for data available while recording
+                mediaRecorder.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                };
+
+                // Event handler when recording stops
+                mediaRecorder.onstop = function () {
+                    let blob = new Blob(chunks, { 'type': 'video/webm' });
+                    chunks = [];
+
+                    // Create a download link for the recorded video
+                    let url = window.URL.createObjectURL(blob);
+                    let downloadLink = document.createElement('a');
+                    downloadLink.href = url;
+                    downloadLink.download = 'recorded_video.webm';
+                    downloadLink.innerHTML = 'Download Recorded Video';
+                    document.body.appendChild(downloadLink);
+                };
+            })
+            .catch(function (error) {
+                console.error('Error accessing the camera:', error);
+            });
+
+        // Start recording
+        function startRecording() {
+            mediaRecorder.start();
+        }
+
+        // Stop recording
+        function stopRecording() {
+            mediaRecorder.stop();
+        }
+    </script>
+</body>
+</html>

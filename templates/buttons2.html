@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Describe the issue by voice</title>
+    <style>
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Describe the issue by voice</h1>
+    <div class="button-container">
+        <button class="button" onclick="startRecording()">Start Recording</button>
+        <button class="button" onclick="stopRecording()">Stop Recording</button>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let chunks = [];
+
+        // Check for browser compatibility with getUserMedia and MediaRecorder APIs
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function (stream) {
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    // Event handler for data available while recording
+                    mediaRecorder.ondataavailable = function (e) {
+                        chunks.push(e.data);
+                    };
+
+                    // Event handler when recording stops
+                    mediaRecorder.onstop = function () {
+                        let blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
+                        chunks = [];
+
+                        // Create a download link for the recorded audio
+                        let url = window.URL.createObjectURL(blob);
+                        let downloadLink = document.createElement('a');
+                        downloadLink.href = url;
+                        downloadLink.download = 'recorded_audio.ogg';
+                        downloadLink.innerHTML = 'Download Recorded Audio';
+                        document.body.appendChild(downloadLink);
+                    };
+                })
+                .catch(function (error) {
+                    console.error('Error accessing the microphone:', error);
+                });
+        } else {
+            console.error('getUserMedia or MediaRecorder not supported by this browser.');
+        }
+
+        // Start recording
+        function startRecording() {
+            if (mediaRecorder) {
+                mediaRecorder.start();
+            } else {
+                console.error('MediaRecorder is not available.');
+            }
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+            } else {
+                console.error('MediaRecorder is not available.');
+            }
+        }
+    </script>
+</body>
+</html>
